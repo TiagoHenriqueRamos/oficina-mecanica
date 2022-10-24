@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="339.0" prefWidth="703.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AgendamentoController">
+   <children>
+      <Label prefHeight="26.0" prefWidth="281.0" text="Cadastro de Agendamento">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <ToolBar prefHeight="22.0" prefWidth="602.0" />
+      <TableView fx:id="tableViewAgendamento" prefHeight="222.0" prefWidth="656.0">
+         <columns>
+            <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
+            <TableColumn fx:id="tableColumnData" prefWidth="75.0" text="Data" />
+            <TableColumn fx:id="tableColumnObservacao" prefWidth="75.0" text="Observação" />
+            <TableColumn fx:id="tableColumnHorario" prefWidth="75.0" text="Horario" />
+            <TableColumn fx:id="tableColumnCliente" prefWidth="75.0" text="Cliente" />
+            <TableColumn fx:id="tableColumnVeiculo" prefWidth="75.0" text="Veiculo" />
+            <TableColumn fx:id="tableColumnEDIT" prefWidth="75.0" />
+            <TableColumn fx:id="tableColumnREMOVE" prefWidth="75.0" />
+            <TableColumn fx:id="tableColumnFinalizar" prefWidth="98.0" />
+         </columns>
+      </TableView>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+         <items>
+            <Button fx:id="btNovo" mnemonicParsing="false" onAction="#onBtNovoAction" text="Novo" />
+         </items>
+      </ToolBar>
+   </children>
+   <opaqueInsets>
+      <Insets left="5.0" top="5.0" />
+   </opaqueInsets>
+</VBox>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="459.0" prefWidth="907.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label prefHeight="45.0" prefWidth="490.0" text="Relatorio de Serviço Prestado">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+         <opaqueInsets>
+            <Insets left="20.0" top="10.0" />
+         </opaqueInsets>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </Label>
+      <ToolBar prefHeight="20.0" prefWidth="799.0" />
+      <TableView prefHeight="398.0" prefWidth="949.0">
+         <columns>
+            <TableColumn prefWidth="75.0" text="Id" />
+            <TableColumn prefWidth="75.0" text="ClienteId" />
+            <TableColumn prefWidth="75.0" text="VeiculoId" />
+            <TableColumn prefWidth="95.199951171875" text="Valor" />
+            <TableColumn minWidth="4.0" prefWidth="40.79998779296875" text="Data" />
+            <TableColumn prefWidth="75.0" text="Horario" />
+            <TableColumn prefWidth="119.20001220703125" text="Pagamento" />
+            <TableColumn prefWidth="107.0" text="Observações" />
+            <TableColumn prefWidth="147.0" text="Finalizar" />
+            <TableColumn prefWidth="147.0" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>
