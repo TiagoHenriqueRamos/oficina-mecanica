@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="459.0" prefWidth="907.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RelatorioController">
+   <children>
+      <Label prefHeight="42.0" prefWidth="658.0" text="Relatorio de Serviço Prestado">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </Label>
+      <ToolBar prefHeight="24.0" prefWidth="907.0" />
+      <TableView fx:id="tableViewRelatorio" prefHeight="398.0" prefWidth="949.0">
+         <columns>
+            <TableColumn fx:id="tableColumnId" prefWidth="52.0" text="Id" />
+            <TableColumn fx:id="tableColumnCliente" prefWidth="98.0" text="ClienteId" />
+            <TableColumn fx:id="tableColumnVeiculo" prefWidth="75.0" text="VeiculoId" />
+            <TableColumn fx:id="tableColumnData" minWidth="4.0" prefWidth="106.0" text="Data" />
+            <TableColumn fx:id="tableColumnHorario" prefWidth="78.0" text="Horario" />
+            <TableColumn prefWidth="95.199951171875" text="Valor" />
+            <TableColumn fx:id="tableColumnPagamento" prefWidth="111.0" text="Pagamento" />
+            <TableColumn fx:id="tableColumnObservacao" prefWidth="288.0" text="Observações" />
+         </columns>
+      </TableView>
+   </children>
+</VBox>
