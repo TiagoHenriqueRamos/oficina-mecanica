@@ -29,7 +29,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 			st = conn.prepareStatement("INSERT INTO oficina.cliente " + "(id, cpf, nome, endereco, telefone)"
 					+ "VALUES " + "(DEFAULT, ?, ?, ?, ? )", Statement.RETURN_GENERATED_KEYS);
 
-			st.setString(1, obj.getCPF());
+			st.setString(1, obj.getCpf());
 			st.setString(2, obj.getNome());
 			st.setString(3, obj.getEndereco());
 			st.setString(4, obj.getTelefone());
@@ -64,7 +64,7 @@ public class ClienteDaoJDBC implements ClienteDao {
 					"UPDATE oficina.cliente " + "SET Nome = ?, Cpf = ?, Endereco = ?, Telefone = ? " + "WHERE Id = ? ");
 
 			st.setString(1, obj.getNome());
-			st.setString(2, obj.getCPF());
+			st.setString(2, obj.getCpf());
 			st.setString(3, obj.getEndereco());
 			st.setString(4, obj.getTelefone());
 			st.setInt(5, obj.getId());
@@ -152,29 +152,5 @@ public class ClienteDaoJDBC implements ClienteDao {
 		}
 
 	}
-
-//	private Cliente instantiateCliente(ResultSet rs) throws SQLException {
-//		Cliente obj = new Cliente();
-//		obj.setId(rs.getInt("Id"));
-//		obj.setNome(rs.getString("Nome"));
-//		obj.setCpf(rs.getString("Cpf"));
-//		obj.setEndereco(rs.getString("Endereco"));
-//		obj.setTelefone(rs.getString("Telefone"));
-//		
-//
-//		return obj;
-//	}
-//
-//	private Veiculo instantiateVeiculo(ResultSet rs) throws SQLException {
-//		Veiculo obj = new Veiculo();
-//		obj.setId(rs.getInt("veiculo.Id"));
-//		obj.setPlaca(rs.getString("veiculo.Placa"));
-//		obj.setMarca(rs.getString("veiculo.Marca"));
-//		obj.setModelo(rs.getString("veiculo.Modelo"));
-//		obj.setId(rs.getInt("ClienteId"));
-//		
-//
-//		return obj;
-//	}
 
 }

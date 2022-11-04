@@ -30,9 +30,9 @@
          </rowConstraints>
          <children>
             <Label prefHeight="17.0" prefWidth="39.0" text="Id" />
-            <TextField fx:id="txtId" editable="false" GridPane.columnIndex="1" />
-            <Label text="Cliente" GridPane.rowIndex="1" />
-            <Label text="Veiculo" GridPane.rowIndex="2" />
+            <TextField fx:id="txtId" GridPane.columnIndex="1" />
+            <Label text="Cliente" GridPane.rowIndex="4" />
+            <Label text="Veiculo" GridPane.rowIndex="5" />
             <Label text="Data" GridPane.rowIndex="3" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
@@ -40,22 +40,22 @@
                   <Button fx:id="btSalvar" mnemonicParsing="false" onAction="#onBtCancelAction" text="Cancelar" />
                </children>
             </HBox>
-            <ComboBox fx:id="comboBoxHorario" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboBoxHorario" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="labelErrorPlaca" GridPane.columnIndex="2" />
-            <Label fx:id="labelErrorMarca" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label fx:id="labelErrorModelo" prefHeight="17.0" prefWidth="0.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <ComboBox fx:id="comboBoxCliente" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Horario" GridPane.rowIndex="4" />
-            <ComboBox fx:id="comboBoxVeiculo" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="labelErrorMarca" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="labelErrorModelo" prefHeight="17.0" prefWidth="0.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <ComboBox fx:id="comboBoxCliente" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Horario" GridPane.rowIndex="2" />
+            <ComboBox fx:id="comboBoxVeiculo" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <DatePicker fx:id="dpData" prefHeight="25.0" prefWidth="283.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Observação" GridPane.rowIndex="5" />
-            <TextField fx:id="txtObservacao" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Observação" GridPane.rowIndex="1" />
+            <TextField fx:id="txtObservacao" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="labelErrorId" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" />
-            <Label fx:id="labelErrorCliente" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label fx:id="labelErrorVeiculo" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label fx:id="labelErrorCliente" prefHeight="17.0" prefWidth="196.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label fx:id="labelErrorVeiculo" prefHeight="17.0" prefWidth="199.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
             <Label fx:id="labelErrorData" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label fx:id="labelErrorHorario" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Label fx:id="labelErrorObservacao" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label fx:id="labelErrorHorario" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label fx:id="labelErrorObservacao" prefHeight="17.0" prefWidth="39.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

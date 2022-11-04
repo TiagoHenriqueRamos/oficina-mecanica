@@ -1,6 +1,7 @@
 package model.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Cliente extends Veiculo implements Serializable {
 
@@ -37,7 +38,7 @@ public class Cliente extends Veiculo implements Serializable {
 		this.nome = nome;
 	}
 
-	public String getCPF() {
+	public String getCpf() {
 		return cpf;
 	}
 
@@ -81,5 +82,23 @@ public class Cliente extends Veiculo implements Serializable {
 	public String toString() {
 		return nome;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		return Objects.equals(id, other.id);
+	}
+	
 
 }

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="339.0" prefWidth="703.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AgendamentoController">
+<VBox prefHeight="339.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AgendamentoController">
    <children>
       <Label prefHeight="26.0" prefWidth="281.0" text="Cadastro de Agendamento">
          <font>
@@ -20,7 +20,7 @@
          </padding>
       </Label>
       <ToolBar prefHeight="22.0" prefWidth="602.0" />
-      <TableView fx:id="tableViewAgendamento" prefHeight="222.0" prefWidth="656.0">
+      <TableView fx:id="tableViewAgendamento" prefHeight="222.0" prefWidth="602.0">
          <columns>
             <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
             <TableColumn fx:id="tableColumnData" prefWidth="75.0" text="Data" />
@@ -30,7 +30,6 @@
             <TableColumn fx:id="tableColumnVeiculo" prefWidth="75.0" text="Veiculo" />
             <TableColumn fx:id="tableColumnEDIT" prefWidth="75.0" />
             <TableColumn fx:id="tableColumnREMOVE" prefWidth="75.0" />
-            <TableColumn fx:id="tableColumnFinalizar" prefWidth="98.0" />
          </columns>
       </TableView>
       <ToolBar prefHeight="40.0" prefWidth="200.0">

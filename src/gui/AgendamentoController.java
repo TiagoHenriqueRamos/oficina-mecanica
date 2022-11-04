@@ -104,9 +104,6 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 		tableColumnCliente.setCellValueFactory(new PropertyValueFactory<>("Cliente"));
 		tableColumnVeiculo.setCellValueFactory(new PropertyValueFactory<>("Veiculo"));
 		
-		
-		
-
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewAgendamento.prefHeightProperty().bind(stage.heightProperty());
 	}
@@ -137,7 +134,7 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 			controller.updateFormData();
 
 			Stage cadastroStage = new Stage();
-			cadastroStage.setTitle("Agendamento Abertura");
+			cadastroStage.setTitle("Agendamento");
 			cadastroStage.setScene(new Scene(pane));
 			cadastroStage.setResizable(false);
 			cadastroStage.initOwner(parentStage);
@@ -208,6 +205,5 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 			}
 		}
 	}
-
 	
 }

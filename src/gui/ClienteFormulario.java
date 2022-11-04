@@ -193,7 +193,7 @@ public class ClienteFormulario implements Initializable {
 			throw new IllegalStateException("Entidade nula!");
 		}
 		txtId.setText(String.valueOf(entidade.getId()));
-		txtCpf.setText(entidade.getCPF());
+		txtCpf.setText(entidade.getCpf());
 		txtNome.setText(entidade.getNome());
 		txtEndereco.setText(entidade.getEndereco());
 		txtTelefone.setText(entidade.getTelefone());

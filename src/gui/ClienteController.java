@@ -53,15 +53,13 @@ public class ClienteController implements Initializable, DataChangeListener {
 
 	@FXML
 	private TableColumn<Cliente, String> tableColumnTelefone;
-	
-		
+			
 	@FXML
 	private TableColumn<Cliente, Cliente> tableColumnEDIT;
 
 	@FXML
 	private TableColumn<Cliente, Cliente> tableColumnREMOVE;
 	
-
 	@FXML
 	private Button btNovo;
 
@@ -72,7 +70,6 @@ public class ClienteController implements Initializable, DataChangeListener {
 		Stage parentStage = Utils.currentStage(event);
 		Cliente obj = new Cliente();
 		createDialogForm(obj, "/gui/ClienteFormulario.fxml", parentStage);
-
 	}
 
 	public void setClienteService(ClienteService clienteService) {
@@ -91,7 +88,7 @@ public class ClienteController implements Initializable, DataChangeListener {
 
 	private void initializeNodes() {
 
-		tableColumnCPF.setCellValueFactory(new PropertyValueFactory<>("CPF"));
+		tableColumnCPF.setCellValueFactory(new PropertyValueFactory<>("Cpf"));
 		tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
 		tableColumnEndereco.setCellValueFactory(new PropertyValueFactory<>("Endereco"));
 		tableColumnTelefone.setCellValueFactory(new PropertyValueFactory<>("Telefone"));

@@ -17,7 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.entities.Agendamento;
-import model.entities.OrdemDeServico;
 import model.entities.Veiculo;
 import model.services.AgendamentoService;
 import model.services.OrdemDeServicoService;
@@ -52,8 +51,6 @@ public class RelatorioController implements Initializable, DataChangeListener {
 	
 	@FXML
 	private TableColumn<Agendamento, Agendamento> tableColumnPagamento;
-
-	
 
 	private ObservableList<Agendamento> obsList;
 

@@ -40,7 +40,7 @@ import model.services.ClienteService;
 import model.services.VeiculoService;
 
 public class AgendamentoFormulario implements Initializable {
-	
+
 	private Agendamento entidade;
 
 	private AgendamentoService agendamentoService;
@@ -48,7 +48,6 @@ public class AgendamentoFormulario implements Initializable {
 	private VeiculoService veiculoService;
 
 	private ClienteService clienteService;
-
 
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
@@ -100,7 +99,8 @@ public class AgendamentoFormulario implements Initializable {
 	@FXML
 	private Button btCancelar;
 
-	public void setService(VeiculoService veiculoService, ClienteService clienteService, AgendamentoService agendamentoService ) {
+	public void setService(VeiculoService veiculoService, ClienteService clienteService,
+			AgendamentoService agendamentoService) {
 		this.veiculoService = veiculoService;
 		this.clienteService = clienteService;
 		this.agendamentoService = agendamentoService;
@@ -155,11 +155,16 @@ public class AgendamentoFormulario implements Initializable {
 		ValidationException exception = new ValidationException("Erro de validação!");
 
 		agendamento.setId(Utils.tryParseToInt(txtId.getText()));
-		
-		
+
+		if (comboBoxCliente.getValue() == null) {
+			exception.addError("Cliente", "Campo não pode ficar vazio!");
+		}
+
 		agendamento.setCliente(comboBoxCliente.getValue());
-		
-		
+
+		if (comboBoxVeiculo.getValue() == null) {
+			exception.addError("Veiculo", "Campo não pode ficar vazio!");
+		}
 		agendamento.setVeiculo(comboBoxVeiculo.getValue());
 
 		if (dpData.getValue() == null) {
@@ -169,18 +174,19 @@ public class AgendamentoFormulario implements Initializable {
 			agendamento.setData(Date.from(instant));
 		}
 
-		
+		if (comboBoxHorario.getValue() == null) {
+			exception.addError("Horario", "Campo não pode ficar vazio!");
+		}
+
 		agendamento.setHorario(comboBoxHorario.getValue());
 		agendamento.setObservacao(txtObservacao.getText());
-		
+
 		if (exception.getErrors().size() > 0) {
 			throw exception;
 		}
-		
-		
 
 		return agendamento;
-	
+
 	}
 
 	@Override
@@ -203,77 +209,92 @@ public class AgendamentoFormulario implements Initializable {
 		}
 
 		txtId.setText(String.valueOf(entidade.getId()));
-		
 
 		if (entidade.getData() != null) {
 			dpData.setValue(LocalDate.ofInstant(entidade.getData().toInstant(), ZoneId.systemDefault()));
 		}
 
-		if (entidade.getCliente() == null) {
+		if (comboBoxCliente == null) {
 			comboBoxCliente.getSelectionModel().selectFirst();
 		}
 		comboBoxCliente.setValue(entidade.getCliente());
-		
-		if (entidade.getVeiculo() == null) {
+
+		if (comboBoxVeiculo == null) {
 			comboBoxVeiculo.getSelectionModel().selectFirst();
 		}
 		comboBoxVeiculo.setValue(entidade.getVeiculo());
-		
+
 		if (entidade.getHorario() == null) {
 			comboBoxHorario.getSelectionModel().selectFirst();
 		}
 		comboBoxHorario.setValue(entidade.getHorario());
-	
-		txtObservacao.setText(entidade.getObservacao());	
-		
+
+		txtObservacao.setText(entidade.getObservacao());
+
 	}
 
+	public void loadAssociateObjects() {
+		if (clienteService == null || veiculoService == null || agendamentoService == null) {
+			throw new IllegalStateException("Service nulo!");
+		}
+
+		List<Cliente> clienteList = clienteService.findAll();
+		List<Veiculo> veiculoList = veiculoService.findAll();
+		List<LocalTime> horarioList = Utils.createHorario();
+
+		obsListCliente = FXCollections.observableArrayList(clienteList);
+		comboBoxCliente.setItems(obsListCliente);
+
+		obsListVeiculo = FXCollections.observableArrayList(veiculoList);
+		comboBoxVeiculo.setItems(obsListVeiculo);
+
+		obsListHorario = FXCollections.observableArrayList(horarioList);
+		comboBoxHorario.setItems(obsListHorario);
+	}
 
 	private void setErrorMessages(Map<String, String> errors) {
 		Set<String> fields = errors.keySet();
 
 		if (fields.contains("Data")) {
 			labelErrorData.setText(errors.get("Data"));
-		
+
 		} else {
 			labelErrorData.setText("");
-		
+
 		}
-		
+
 		if (fields.contains("Cliente")) {
 			labelErrorCliente.setText(errors.get("Cliente"));
-		
+
 		} else {
 			labelErrorCliente.setText("");
-		
+
 		}
-		
+
 		if (fields.contains("Veiculo")) {
 			labelErrorVeiculo.setText(errors.get("Veiculo"));
-		
+
 		} else {
 			labelErrorVeiculo.setText("");
-		
+
 		}
-		
+
 		if (fields.contains("Horario")) {
 			labelErrorHorario.setText(errors.get("Horario"));
-		
+
 		} else {
 			labelErrorHorario.setText("");
-		
+
 		}
 
 	}
 
-
-	
 	private void initializeComboBoxCliente() {
 		Callback<ListView<Cliente>, ListCell<Cliente>> factory = lv -> new ListCell<Cliente>() {
 			@Override
 			protected void updateItem(Cliente item, boolean empty) {
 				super.updateItem(item, empty);
-					setText(empty ? "" : item.getNome());
+				setText(empty ? "" : item.getNome());
 			}
 		};
 		comboBoxCliente.setCellFactory(factory);
@@ -305,22 +326,4 @@ public class AgendamentoFormulario implements Initializable {
 		comboBoxHorario.setButtonCell(factory.call(null));
 	}
 
-	public void loadAssociateObjects() {
-		if (clienteService == null || veiculoService == null || agendamentoService == null) {
-			throw new IllegalStateException("Service nulo!");
-		}
-
-		List<Cliente> clienteList = clienteService.findAll();
-		List<Veiculo> veiculoList = veiculoService.findAll();
-		List<LocalTime> horarioList = Utils.createHorario();
-
-		obsListCliente = FXCollections.observableArrayList(clienteList);
-		comboBoxCliente.setItems(obsListCliente);
-
-		obsListVeiculo = FXCollections.observableArrayList(veiculoList);
-		comboBoxVeiculo.setItems(obsListVeiculo);
-
-		obsListHorario = FXCollections.observableArrayList(horarioList);
-		comboBoxHorario.setItems(obsListHorario);
-	}
 }

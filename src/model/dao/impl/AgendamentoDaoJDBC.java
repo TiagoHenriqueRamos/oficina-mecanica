@@ -35,13 +35,11 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 					+ "(data, horario, observacao, clienteId, veiculoId  ) " + "VALUES " + "( ?,?,?,?,?)",
 					Statement.RETURN_GENERATED_KEYS);
 
-			
 			st.setDate(1, new java.sql.Date(obj.getData().getTime()));
 			st.setTime(2, Time.valueOf(obj.getHorario()));
 			st.setString(3, obj.getObservacao());
 			st.setInt(4, obj.getCliente().getId());
 			st.setInt(5, obj.getVeiculo().getId());
-			 
 
 			int rowsAffected = st.executeUpdate();
 
@@ -65,10 +63,9 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 	public void update(Agendamento obj) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("UPDATE oficina.agendamento " 
-		+ "SET ClienteId = ?, VeiculoId = ?, Data = ?, Horario = ?, observacao = ? " 
-					+ "WHERE id = ?");
-			
+			st = conn.prepareStatement("UPDATE oficina.agendamento "
+					+ "SET ClienteId = ?, VeiculoId = ?, Data = ?, Horario = ?, observacao = ? " + "WHERE id = ?");
+
 			st.setInt(1, obj.getCliente().getId());
 			st.setInt(2, obj.getVeiculo().getId());
 			st.setDate(3, new java.sql.Date(obj.getData().getTime()));
@@ -114,16 +111,15 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 		return veiculo;
 	}
 
-	private Agendamento instantiateAgendamentoAbertura(ResultSet rs, Veiculo vei, Cliente cliente)
-			throws SQLException {
-		Agendamento agendamentoAbertura = new Agendamento();
-		agendamentoAbertura.setId(rs.getInt("Id"));
-		agendamentoAbertura.setHorario(rs.getTime("agendamento.horario").toLocalTime());
-		agendamentoAbertura.setData(new java.util.Date(rs.getDate("agendamento.data").getTime()));
-		agendamentoAbertura.setObservacao(rs.getString("observacao"));
-		agendamentoAbertura.setVeiculo(vei);
-		agendamentoAbertura.setCliente(cliente);
-		return agendamentoAbertura;
+	private Agendamento instantiateAgendamento(ResultSet rs, Veiculo vei, Cliente cliente) throws SQLException {
+		Agendamento agendamento = new Agendamento();
+		agendamento.setId(rs.getInt("Id"));
+		agendamento.setHorario(rs.getTime("agendamento.horario").toLocalTime());
+		agendamento.setData(new java.util.Date(rs.getDate("agendamento.data").getTime()));
+		agendamento.setObservacao(rs.getString("observacao"));
+		agendamento.setVeiculo(vei);
+		agendamento.setCliente(cliente);
+		return agendamento;
 	}
 
 	@Override
@@ -131,10 +127,10 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT agendamento.id, agendamento.data, agendamento.observacao, agendamento.horario, cliente.nome, veiculo.placa "
-					+"FROM agendamento "
-					+"JOIN cliente  ON agendamento.clienteId = cliente.id "
-					+"JOIN veiculo ON agendamento.veiculoId = veiculo.id ");
+			st = conn.prepareStatement(
+					"SELECT agendamento.id, agendamento.data, agendamento.observacao, agendamento.horario, cliente.nome, veiculo.placa "
+							+ "FROM agendamento " + "JOIN cliente  ON agendamento.clienteId = cliente.id "
+							+ "JOIN veiculo ON agendamento.veiculoId = veiculo.id ");
 
 			rs = st.executeQuery();
 
@@ -153,8 +149,8 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 					cliente = instantiateCliente(rs);
 					mapCliente.put(rs.getString("cliente.nome"), cliente);
 				}
-				Agendamento agendamentoAbertura = instantiateAgendamentoAbertura(rs, vei, cliente);
-				list.add(agendamentoAbertura);
+				Agendamento agendamento = instantiateAgendamento(rs, vei, cliente);
+				list.add(agendamento);
 			}
 			return list;
 		} catch (SQLException e) {
@@ -165,4 +161,5 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 		}
 
 	}
+
 }
