@@ -29,7 +29,6 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Servico">
                      <items>
-                        <MenuItem fx:id="menuItemOrdemDeServico" mnemonicParsing="false" onAction="#onMenuItemOrdemDeServico" text="Ordem De Servico" />
                         <MenuItem fx:id="menuItemRelatorio" mnemonicParsing="false" onAction="#onMenuItemRelatorio" text="Relatorio" />
                      </items>
                   </Menu>

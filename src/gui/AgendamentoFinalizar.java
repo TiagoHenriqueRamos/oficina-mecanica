@@ -32,19 +32,24 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 import model.entities.Agendamento;
-import model.entities.OrdemDeServico;
+import model.entities.Cliente;
+import model.entities.Relatorio;
+import model.entities.Veiculo;
 import model.exceptions.ValidationException;
+import model.services.AgendamentoService;
 import model.services.ClienteService;
-import model.services.OrdemDeServicoService;
+import model.services.RelatorioService;
 import model.services.VeiculoService;
 
-public class OrdemDeServicoFormulario implements Initializable {
-
-	private OrdemDeServico ordem;
+public class AgendamentoFinalizar implements Initializable {
 
 	private Agendamento entidade;
 
-	private OrdemDeServicoService ordemDeServicoService;
+	private Relatorio relatorio;
+
+	private AgendamentoService agendamentoService;
+
+	private RelatorioService relatorioService;
 
 	private VeiculoService veiculoService;
 
@@ -53,7 +58,13 @@ public class OrdemDeServicoFormulario implements Initializable {
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	@FXML
+	private Label labelErrorCliente;
+
+	@FXML
 	private Label labelErrorId;
+
+	@FXML
+	private Label labelErrorVeiculo;
 
 	@FXML
 	private Label labelErrorData;
@@ -62,16 +73,16 @@ public class OrdemDeServicoFormulario implements Initializable {
 	private Label labelErrorHorario;
 
 	@FXML
-	private Label labelErrorPagamento;
-	
-	@FXML
 	private Label labelErrorObservacao;
-	
-	@FXML
-	private Label labelErrorValor;
 
 	@FXML
 	private TextField txtId;
+
+	@FXML
+	private ComboBox<Cliente> comboBoxCliente;
+
+	@FXML
+	private ComboBox<Veiculo> comboBoxVeiculo;
 
 	@FXML
 	private ComboBox<LocalTime> comboBoxHorario;
@@ -85,12 +96,13 @@ public class OrdemDeServicoFormulario implements Initializable {
 	@FXML
 	private TextField txtObservacao;
 
+	private ObservableList<Cliente> obsListCliente;
+
+	private ObservableList<Veiculo> obsListVeiculo;
+
 	private ObservableList<LocalTime> obsListHorario;
 
 	private ObservableList<String> obsListPagamento;
-	
-	@FXML
-	private TextField txtValor;
 
 	@FXML
 	private Button btSalvar;
@@ -98,16 +110,16 @@ public class OrdemDeServicoFormulario implements Initializable {
 	@FXML
 	private Button btCancelar;
 
-	public void setServices(VeiculoService veiculoService, ClienteService clienteService,
-			OrdemDeServicoService ordemDeServicoService) {
+	public void setService(VeiculoService veiculoService, ClienteService clienteService,
+			AgendamentoService agendamentoService, RelatorioService relatorioService) {
 		this.veiculoService = veiculoService;
 		this.clienteService = clienteService;
-		this.ordemDeServicoService = ordemDeServicoService;
-
+		this.agendamentoService = agendamentoService;
+		this.relatorioService = relatorioService;
 	}
 
-	public void setEntidade(OrdemDeServico obj) {
-		this.ordem = obj;
+	public void setEntidade(Agendamento obj) {
+		this.entidade = obj;
 	}
 
 	@FXML
@@ -116,13 +128,15 @@ public class OrdemDeServicoFormulario implements Initializable {
 		if (entidade == null) {
 			throw new IllegalStateException("Entidade nula!");
 		}
-		if (veiculoService == null) {
+		if (agendamentoService == null) {
 			throw new IllegalStateException("Service nulo!");
 		}
 		try {
 
-			ordem = getFormData();
-			ordemDeServicoService.saveOrUpdate(ordem);
+			entidade = getFormData();
+			relatorioService.insert(entidade.getRelatorio());
+			agendamentoService.deleteById(entidade.getId());
+
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 
@@ -149,22 +163,26 @@ public class OrdemDeServicoFormulario implements Initializable {
 		dataChangeListeners.add(listner);
 	}
 
-	private OrdemDeServico getFormData() {
-		OrdemDeServico ordemDeServico = new OrdemDeServico();
+	private Agendamento getFormData() {
 		Agendamento agendamento = new Agendamento();
+
 		ValidationException exception = new ValidationException("Erro de validação!");
 
-		ordemDeServico.setId(Utils.tryParseToInt(txtId.getText()));
-		ordemDeServico.setObservacao(null);
+		agendamento.setId(Utils.tryParseToInt(txtId.getText()));
 
-		if (comboBoxPagamento.getValue() == null) {
-			exception.addError("Pagamento", "Campo não pode ficar vazio!");
+		if (comboBoxCliente.getValue() == null) {
+			exception.addError("Cliente", "Campo não pode ficar vazio!");
 		}
-		agendamento.setPagamento(comboBoxPagamento.getValue());
+
+		agendamento.setCliente(comboBoxCliente.getValue());
+
+		if (comboBoxVeiculo.getValue() == null) {
+			exception.addError("Veiculo", "Campo não pode ficar vazio!");
+		}
+		agendamento.setVeiculo(comboBoxVeiculo.getValue());
 
 		if (dpData.getValue() == null) {
 			exception.addError("Data", "Campo não pode ficar vazio!");
-
 		} else {
 			Instant instant = Instant.from(dpData.getValue().atStartOfDay(ZoneId.systemDefault()));
 			agendamento.setData(Date.from(instant));
@@ -176,13 +194,16 @@ public class OrdemDeServicoFormulario implements Initializable {
 
 		agendamento.setHorario(comboBoxHorario.getValue());
 		agendamento.setObservacao(txtObservacao.getText());
-		ordemDeServico.setValor(Utils.tryParseToDouble(txtValor.getText()));
 
+		if (comboBoxPagamento.getValue() == null) {
+			exception.addError("Pagamento", "Campo não pode ficar vazio!");
+		}
+		agendamento.setPagamento(comboBoxPagamento.getValue());
 		if (exception.getErrors().size() > 0) {
 			throw exception;
 		}
 
-		return ordemDeServico;
+		return agendamento;
 
 	}
 
@@ -194,7 +215,8 @@ public class OrdemDeServicoFormulario implements Initializable {
 	private void initializeNodes() {
 		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(dpData, "dd/MM/yyyy");
-
+		initializeComboBoxCliente();
+		initializeComboBoxVeiculo();
 		initializeComboBoxHorario();
 		initializeComboBoxFormaPagamento();
 
@@ -206,22 +228,58 @@ public class OrdemDeServicoFormulario implements Initializable {
 		}
 
 		txtId.setText(String.valueOf(entidade.getId()));
-		txtObservacao.setText(entidade.getObservacao());
-		txtValor.setText(String.valueOf(entidade.getValor()));
 
 		if (entidade.getData() != null) {
 			dpData.setValue(LocalDate.ofInstant(entidade.getData().toInstant(), ZoneId.systemDefault()));
 		}
 
-		if (comboBoxHorario == null) {
+		if (comboBoxCliente == null) {
+			comboBoxCliente.getSelectionModel().selectFirst();
+		}
+		comboBoxCliente.setValue(entidade.getCliente());
+
+		if (comboBoxVeiculo == null) {
+			comboBoxVeiculo.getSelectionModel().selectFirst();
+		}
+		comboBoxVeiculo.setValue(entidade.getVeiculo());
+
+		if (entidade.getHorario() == null) {
 			comboBoxHorario.getSelectionModel().selectFirst();
 		}
+		comboBoxHorario.setValue(entidade.getHorario());
+
+		txtObservacao.setText(entidade.getObservacao());
+
 		if (comboBoxPagamento == null) {
 			comboBoxPagamento.getSelectionModel().selectFirst();
 		}
 
-		comboBoxHorario.setValue(entidade.getHorario());
 		comboBoxPagamento.setValue(entidade.getPagamento());
+
+	}
+
+	public void loadAssociateObjects() {
+		if (clienteService == null || veiculoService == null || agendamentoService == null) {
+			throw new IllegalStateException("Service nulo!");
+		}
+
+		List<Cliente> clienteList = clienteService.findAll();
+		List<Veiculo> veiculoList = veiculoService.findAll();
+		List<LocalTime> horarioList = Utils.createHorario();
+		List<String> list = entidade.getOpcoesPagamento();
+
+		obsListCliente = FXCollections.observableArrayList(clienteList);
+		comboBoxCliente.setItems(obsListCliente);
+
+		obsListVeiculo = FXCollections.observableArrayList(veiculoList);
+		comboBoxVeiculo.setItems(obsListVeiculo);
+
+		obsListHorario = FXCollections.observableArrayList(horarioList);
+		comboBoxHorario.setItems(obsListHorario);
+
+		obsListPagamento = FXCollections.observableArrayList(list);
+		comboBoxPagamento.setItems(obsListPagamento);
+
 	}
 
 	private void setErrorMessages(Map<String, String> errors) {
@@ -235,6 +293,22 @@ public class OrdemDeServicoFormulario implements Initializable {
 
 		}
 
+		if (fields.contains("Cliente")) {
+			labelErrorCliente.setText(errors.get("Cliente"));
+
+		} else {
+			labelErrorCliente.setText("");
+
+		}
+
+		if (fields.contains("Veiculo")) {
+			labelErrorVeiculo.setText(errors.get("Veiculo"));
+
+		} else {
+			labelErrorVeiculo.setText("");
+
+		}
+
 		if (fields.contains("Horario")) {
 			labelErrorHorario.setText(errors.get("Horario"));
 
@@ -243,14 +317,30 @@ public class OrdemDeServicoFormulario implements Initializable {
 
 		}
 
-		if (fields.contains("Pagamento")) {
-			labelErrorPagamento.setText(errors.get("Pagamento"));
+	}
 
-		} else {
-			labelErrorPagamento.setText("");
+	private void initializeComboBoxCliente() {
+		Callback<ListView<Cliente>, ListCell<Cliente>> factory = lv -> new ListCell<Cliente>() {
+			@Override
+			protected void updateItem(Cliente item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(empty ? "" : item.getNome());
+			}
+		};
+		comboBoxCliente.setCellFactory(factory);
+		comboBoxCliente.setButtonCell(factory.call(null));
+	}
 
-		}
-
+	private void initializeComboBoxVeiculo() {
+		Callback<ListView<Veiculo>, ListCell<Veiculo>> factory = lv -> new ListCell<Veiculo>() {
+			@Override
+			protected void updateItem(Veiculo item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(empty ? "" : item.getPlaca());
+			}
+		};
+		comboBoxVeiculo.setCellFactory(factory);
+		comboBoxVeiculo.setButtonCell(factory.call(null));
 	}
 
 	private void initializeComboBoxHorario() {
@@ -278,18 +368,4 @@ public class OrdemDeServicoFormulario implements Initializable {
 		comboBoxPagamento.setButtonCell(factory.call(null));
 	}
 
-	public void loadAssociateObjects() {
-		if (clienteService == null || veiculoService == null || ordemDeServicoService == null) {
-			throw new IllegalStateException("Service nulo!");
-		}
-
-		List<LocalTime> horarioList = Utils.createHorario();
-		List<String> pagamentoList = ordem.getOpcoesPagamento();
-
-		obsListHorario = FXCollections.observableArrayList(horarioList);
-		comboBoxHorario.setItems(obsListHorario);
-
-		obsListPagamento = FXCollections.observableArrayList(pagamentoList);
-		comboBoxPagamento.setItems(obsListPagamento);
-	}
 }

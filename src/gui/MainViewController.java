@@ -18,7 +18,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import model.services.AgendamentoService;
 import model.services.ClienteService;
-import model.services.OrdemDeServicoService;
+import model.services.RelatorioService;
 import model.services.VeiculoService;
 
 public class MainViewController implements Initializable {
@@ -31,10 +31,6 @@ public class MainViewController implements Initializable {
 
 	@FXML
 	private MenuItem menuItemAgendamento;
-
-	@FXML
-	private MenuItem menuItemOrdemDeServico;
-
 
 	@FXML
 	private MenuItem menuItemRelatorio;
@@ -64,18 +60,9 @@ public class MainViewController implements Initializable {
 	}
 
 	@FXML
-	public void onMenuItemOrdemDeServico() {
-		loadView("/gui/OrdemDeServico.fxml", (OrdemDeServicoController controller) -> {
-			controller.setServices(new AgendamentoService(), new OrdemDeServicoService());
-			controller.updateTableViewOrdemDeServico();
-
-		});
-	}
-
-	@FXML
 	public void onMenuItemRelatorio() {
 		loadView("/gui/Relatorio.fxml", (RelatorioController controller) -> {
-			controller.setRelatorioService(new AgendamentoService(), new OrdemDeServicoService());
+			controller.setRelatorioService(new RelatorioService());
 			controller.updateTableViewRelatorio();
 
 		});

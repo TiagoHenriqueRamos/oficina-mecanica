@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class OrdemDeServico {
+public class Relatorio {
 
 	private Integer id;
 	private String observacao;
@@ -15,17 +15,18 @@ public class OrdemDeServico {
 	private Veiculo veiculo;
 	private Date data;
 	private LocalTime horario;
-	
-	
+	private String Pagamento;
+
 	List<String> opcoesPagamento = Arrays.asList("DINHEIRO", "DEBITO", "CREDITO", "PIX");
 
-	public OrdemDeServico() {
+	public Relatorio() {
 	}
 
-	public OrdemDeServico(Integer id, String observacao, Double valor, Cliente cliente, Veiculo veiculo, Agendamento agendamento) {
+	public Relatorio(Integer id, String observacao, Double valor, Cliente cliente, Veiculo veiculo,
+			Agendamento agendamento) {
 
 		this.id = id;
-		this.observacao = observacao;
+		this.observacao = agendamento.getObservacao();
 		this.valor = valor;
 		this.cliente = cliente;
 		this.veiculo = veiculo;
@@ -92,6 +93,18 @@ public class OrdemDeServico {
 		return opcoesPagamento;
 	}
 
+	public void setOpcoesPagamento(List<String> opcoesPagamento) {
+		this.opcoesPagamento = opcoesPagamento;
+	}
+
+	public String getPagamento() {
+		return Pagamento;
+	}
+
+	public void setPagamento(String pagamento) {
+		Pagamento = pagamento;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -105,7 +118,7 @@ public class OrdemDeServico {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OrdemDeServico other = (OrdemDeServico) obj;
+		Relatorio other = (Relatorio) obj;
 		return Objects.equals(id, other.id);
 	}
 

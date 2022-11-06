@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,47 +18,43 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.entities.Agendamento;
-import model.entities.Veiculo;
-import model.services.AgendamentoService;
-import model.services.OrdemDeServicoService;
+import model.entities.Relatorio;
+import model.services.RelatorioService;
 
 public class RelatorioController implements Initializable, DataChangeListener {
 
-	private AgendamentoService agendamentoService;
-	
-	@SuppressWarnings("unused")
-	private OrdemDeServicoService ordemDeServicoService;
-	
+	private RelatorioService relatorioService;
+			
 	@FXML
-	private TableView<Agendamento> tableViewRelatorio;
+	private TableView<Relatorio> tableViewRelatorio;
 
 	@FXML
-	private TableColumn<Agendamento, Integer> tableColumnId;
+	private TableColumn<Relatorio, Integer> tableColumnId;
 
 	@FXML
-	private TableColumn<Agendamento, String> tableColumnCliente;
+	private TableColumn<Relatorio, String> tableColumnCliente;
 
 	@FXML
-	private TableColumn<Agendamento, String> tableColumnVeiculo;
+	private TableColumn<Relatorio, String> tableColumnVeiculo;
 
 	@FXML
-	private TableColumn<Agendamento, Date> tableColumnData;
+	private TableColumn<Relatorio, Date> tableColumnData;
 
 	@FXML
-	private TableColumn<Agendamento, Veiculo> tableColumnHorario;
+	private TableColumn<Relatorio, LocalTime> tableColumnHorario;
 
 	@FXML
-	private TableColumn<Agendamento, Veiculo> tableColumnObservacao;
+	private TableColumn<Agendamento, String> tableColumnObservacao;
 	
 	@FXML
-	private TableColumn<Agendamento, Agendamento> tableColumnPagamento;
+	private TableColumn<Agendamento, String> tableColumnPagamento;
+	
+	
 
-	private ObservableList<Agendamento> obsList;
+	private ObservableList<Relatorio> obsList;
 
-	public void setRelatorioService(AgendamentoService agendamentoService,
-			OrdemDeServicoService ordemDeServicoService) {
-		this.agendamentoService = agendamentoService;
-		this.ordemDeServicoService = ordemDeServicoService;
+	public void setRelatorioService(RelatorioService relatorioService) {
+		this.relatorioService = relatorioService;
 	}
 
 	@Override
@@ -80,10 +77,10 @@ public class RelatorioController implements Initializable, DataChangeListener {
 	}
 
 	public void updateTableViewRelatorio() {
-		if (agendamentoService == null) {
+		if (relatorioService == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Agendamento> list = agendamentoService.findAll();
+		List<Relatorio> list = relatorioService.findAll();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewRelatorio.setItems(obsList);
 

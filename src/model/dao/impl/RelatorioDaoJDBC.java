@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,16 +14,16 @@ import java.util.Map;
 import db.DB;
 import db.DbException;
 import db.DbIntegrityException;
-import model.dao.OrdemDeServicoDao;
+import model.dao.RelatorioDao;
 import model.entities.Cliente;
-import model.entities.OrdemDeServico;
+import model.entities.Relatorio;
 import model.entities.Veiculo;
 
-public class OrdemDeServicoDaoJDBC implements OrdemDeServicoDao {
+public class RelatorioDaoJDBC implements RelatorioDao {
 
 	private Connection conn;
 
-	public OrdemDeServicoDaoJDBC(Connection conn) {
+	public RelatorioDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
 
@@ -39,29 +40,29 @@ public class OrdemDeServicoDaoJDBC implements OrdemDeServicoDao {
 		return veiculo;
 	}
 
-	private OrdemDeServico instantiateOrdemDeServico(ResultSet rs, Veiculo vei, Cliente cliente) throws SQLException {
-		OrdemDeServico ordemDeServico = new OrdemDeServico();
-		ordemDeServico.setId(rs.getInt("id"));
-		ordemDeServico.setHorario(rs.getTime("ordem_de_servico.horario").toLocalTime());
-		ordemDeServico.setData(new java.util.Date(rs.getDate("ordem_de_servico.data").getTime()));
-		ordemDeServico.setObservacao(rs.getString("observacao"));
-		ordemDeServico.setCliente(cliente);
-		ordemDeServico.setVeiculo(vei);
-		return ordemDeServico;
+	private Relatorio instantiateRelatorio(ResultSet rs, Veiculo vei, Cliente cliente) throws SQLException {
+		Relatorio relatorio = new Relatorio();
+		relatorio.setId(rs.getInt("id"));
+		relatorio.setHorario(rs.getTime("relatorio.horario").toLocalTime());
+		relatorio.setData(new java.util.Date(rs.getDate("relatorio.data").getTime()));
+		relatorio.setObservacao(rs.getString("observacao"));
+		relatorio.setCliente(cliente);
+		relatorio.setVeiculo(vei);
+		return relatorio;
 	}
 
 	@Override
-	public List<OrdemDeServico> findAll() {
+	public List<Relatorio> findAll() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT ordem_de_servico.id, ordem_de_servico.data, ordem_de_servico.observacao, ordem_de_servico.horario, cliente.nome, veiculo.placa "
-							+ "FROM ordem_de_servico " + "JOIN cliente  ON ordem_de_servico.clienteId = cliente.id "
-							+ "JOIN veiculo ON ordem_de_servico.veiculoId = veiculo.id ");
+					"SELECT relatorio.id, cliente.nome, veiculo.placa, relatorio.data, relatorio.horario, relatorio.valor, relatorio.pagamento, relatorio.observacao "
+							+ "FROM relatorio JOIN cliente  ON relatorio.clienteId = cliente.id "
+							+ "JOIN veiculo ON relatorio.veiculoId = veiculo.id");
 			rs = st.executeQuery();
 
-			List<OrdemDeServico> list = new ArrayList<>();
+			List<Relatorio> list = new ArrayList<>();
 			Map<String, Veiculo> mapVeiculo = new HashMap<>();
 			Map<String, Cliente> mapCliente = new HashMap<>();
 
@@ -76,8 +77,8 @@ public class OrdemDeServicoDaoJDBC implements OrdemDeServicoDao {
 					cliente = instantiateCliente(rs);
 					mapCliente.put(rs.getString("cliente.nome"), cliente);
 				}
-				OrdemDeServico ordemDeServico = instantiateOrdemDeServico(rs, vei, cliente);
-				list.add(ordemDeServico);
+				Relatorio relatorio = instantiateRelatorio(rs, vei, cliente);
+				list.add(relatorio);
 			}
 			return list;
 		} catch (SQLException e) {
@@ -89,16 +90,20 @@ public class OrdemDeServicoDaoJDBC implements OrdemDeServicoDao {
 	}
 
 	@Override
-	public void insert(OrdemDeServico obj) {
+	public void insert(Relatorio obj) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement(
-					"INSERT INTO ordemdeservico " + "(id, descricao, valor, clienteId)" + "VALUES" + "(?,?,?,?,?)",
-					Statement.RETURN_GENERATED_KEYS);
-			st.setInt(1, obj.getId());
-			st.setString(2, obj.getObservacao());
+			st = conn.prepareStatement("INSERT INTO oficina.relatorio "
+					+ "(id, ClienteId, VeiculoId, Valor, Pagamento, Data, Observacao, Horario)" + "VALUES"
+					+ "(DEFAULT, ?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+
+			st.setInt(1, obj.getCliente().getId());
+			st.setInt(2, obj.getVeiculo().getId());
 			st.setDouble(3, obj.getValor());
-			st.setInt(4, obj.getCliente().getId());
+			st.setString(4, obj.getPagamento());
+			st.setDate(5, new java.sql.Date(obj.getData().getTime()));
+			st.setString(6, obj.getObservacao());
+			st.setTime(7, Time.valueOf(obj.getHorario()));
 
 			int rowsAffected = st.executeUpdate();
 
@@ -122,12 +127,12 @@ public class OrdemDeServicoDaoJDBC implements OrdemDeServicoDao {
 	}
 
 	@Override
-	public void update(OrdemDeServico obj) {
+	public void update(Relatorio obj) {
 
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"UPDATE ordemdeservico " + "SET id = ?, descricao = ?, valor = ?, clienteId = ?" + "WHERE id = ?");
+					"UPDATE relatorio " + "SET id = ?, descricao = ?, valor = ?, clienteId = ?" + "WHERE id = ?");
 			st.setInt(1, obj.getId());
 			st.setString(2, obj.getObservacao());
 			st.setDouble(3, obj.getValor());
@@ -144,7 +149,7 @@ public class OrdemDeServicoDaoJDBC implements OrdemDeServicoDao {
 	public void deleteById(Integer id) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("DELETE FROM ordemdeservico WHERE id = ?");
+			st = conn.prepareStatement("DELETE FROM relatorio WHERE id = ?");
 			st.setInt(1, id);
 			st.executeUpdate();
 		} catch (SQLException e) {

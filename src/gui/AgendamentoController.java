@@ -36,12 +36,13 @@ import model.entities.Cliente;
 import model.entities.Veiculo;
 import model.services.AgendamentoService;
 import model.services.ClienteService;
+import model.services.RelatorioService;
 import model.services.VeiculoService;
 
 public class AgendamentoController implements Initializable, DataChangeListener {
 
 	private AgendamentoService agendamentoService;
-	
+
 	@FXML
 	private TableView<Agendamento> tableViewAgendamento;
 
@@ -65,19 +66,22 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 
 	@FXML
 	private TableColumn<Agendamento, Agendamento> tableColumnREMOVE;
-	
+
 	@FXML
 	private TableColumn<Agendamento, Agendamento> tableColumnEDIT;
-	
+
+	@FXML
+	private TableColumn<Agendamento, Agendamento> tableColumnFinalizar;
+
 	@FXML
 	private Button btNovo;
 
 	private ObservableList<Agendamento> obsList;
 
 	public void setEntidade(Agendamento obj) {
-		
+
 	}
-	
+
 	@FXML
 	public void onBtNovoAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
@@ -103,7 +107,7 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 		tableColumnObservacao.setCellValueFactory(new PropertyValueFactory<>("Observacao"));
 		tableColumnCliente.setCellValueFactory(new PropertyValueFactory<>("Cliente"));
 		tableColumnVeiculo.setCellValueFactory(new PropertyValueFactory<>("Veiculo"));
-		
+
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewAgendamento.prefHeightProperty().bind(stage.heightProperty());
 	}
@@ -117,7 +121,8 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 		tableViewAgendamento.setItems(obsList);
 		initRemoveButtons();
 		initEditButtons();
-		
+		initFinalizarButtons();
+
 	}
 
 	private void createDialogForm(Agendamento obj, String absoluteName, Stage parentStage) {
@@ -150,7 +155,7 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 	public void onDataChanged() {
 		updateTableViewAgendamento();
 	}
-	
+
 	private void initEditButtons() {
 		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tableColumnEDIT.setCellFactory(param -> new TableCell<Agendamento, Agendamento>() {
@@ -205,5 +210,68 @@ public class AgendamentoController implements Initializable, DataChangeListener 
 			}
 		}
 	}
-	
+
+	private void finalizarEntity(Agendamento agendamento, ActionEvent event) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Deseja mesmo finalizar?");
+
+		if (result.get() == ButtonType.OK) {
+			if (agendamentoService == null) {
+				throw new IllegalStateException("Service nulo!");
+
+			}
+
+			try {
+
+				serviceDone(agendamento, "/gui/AgendamentoFinalizar.fxml", Utils.currentStage(event));
+				updateTableViewAgendamento();
+
+			} catch (DbIntegrityException e) {
+				Alerts.showAlert("Erro ao finalizar serviço!", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
+	}
+
+	private synchronized void serviceDone(Agendamento obj, String absoluteName, Stage parentStage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			Pane pane = loader.load();
+
+			AgendamentoFinalizar controller = loader.getController();
+			controller.setEntidade(obj);
+			controller.setService(new VeiculoService(), new ClienteService(), new AgendamentoService(),
+					new RelatorioService());
+			controller.loadAssociateObjects();
+			controller.subscribeDataChengeListener(this);
+			controller.updateFormData();
+
+			Stage cadastroStage = new Stage();
+			cadastroStage.setTitle("Finalizar");
+			cadastroStage.setScene(new Scene(pane));
+			cadastroStage.setResizable(false);
+			cadastroStage.initOwner(parentStage);
+			cadastroStage.initModality(Modality.WINDOW_MODAL);
+			cadastroStage.showAndWait();
+
+		} catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Erro ao carregar a página!", e.getMessage(), AlertType.ERROR);
+		}
+	}
+
+	private void initFinalizarButtons() {
+		tableColumnFinalizar.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnFinalizar.setCellFactory(param -> new TableCell<Agendamento, Agendamento>() {
+			private final Button button = new Button("Finalizar");
+
+			@Override
+			protected void updateItem(Agendamento extrato, boolean empty) {
+				super.updateItem(extrato, empty);
+				if (extrato == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(event -> finalizarEntity(extrato, event));
+			}
+		});
+	}
 }

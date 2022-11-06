@@ -3,7 +3,7 @@ package model.dao;
 import db.DB;
 import model.dao.impl.AgendamentoDaoJDBC;
 import model.dao.impl.ClienteDaoJDBC;
-import model.dao.impl.OrdemDeServicoDaoJDBC;
+import model.dao.impl.RelatorioDaoJDBC;
 import model.dao.impl.VeiculoDaoJDBC;
 
 public class DaoFactory {
@@ -21,7 +21,7 @@ public class DaoFactory {
 
 	}
 
-	public static OrdemDeServicoDao createOrdemDeServicoDao() {
-		return new OrdemDeServicoDaoJDBC(DB.getConnection());
+	public static RelatorioDao createRelatorioDao() {
+		return new RelatorioDaoJDBC(DB.getConnection());
 	}
 }

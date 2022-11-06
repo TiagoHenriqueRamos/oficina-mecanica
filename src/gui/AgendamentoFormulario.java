@@ -65,6 +65,7 @@ public class AgendamentoFormulario implements Initializable {
 
 	@FXML
 	private Label labelErrorHorario;
+	
 
 	@FXML
 	private Label labelErrorObservacao;

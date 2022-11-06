@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Agendamento {
 
@@ -12,10 +13,9 @@ public class Agendamento {
 	private Date data;
 	private LocalTime horario;
 	private String observacao;
-	private OrdemDeServico ordemDeServico;
+	private Relatorio relatorio;
 	private Veiculo veiculo;
 	private String pagamento;
-	private Double valor;
 
 	List<String> opcoesPagamento = Arrays.asList("DINHEIRO", "DEBITO", "CREDITO", "PIX");
 
@@ -23,16 +23,16 @@ public class Agendamento {
 	}
 
 	public Agendamento(Integer id, Cliente cliente, Date data, LocalTime horario, String observacao,
-			OrdemDeServico ordemDeServico, Veiculo veiculo, String pagamento, Double valor) {
+			Relatorio relatorio, Veiculo veiculo, String pagamento) {
+
 		this.id = id;
 		this.cliente = cliente;
 		this.data = data;
 		this.horario = horario;
 		this.observacao = observacao;
-		this.ordemDeServico = ordemDeServico;
+		this.relatorio = relatorio;
 		this.veiculo = veiculo;
 		this.pagamento = pagamento;
-		this.valor = valor;
 	}
 
 	public Integer getId() {
@@ -75,12 +75,12 @@ public class Agendamento {
 		this.observacao = obervacao;
 	}
 
-	public OrdemDeServico getOrdemDeServico() {
-		return ordemDeServico;
+	public Relatorio getRelatorio() {
+		return relatorio;
 	}
 
-	public void setOrdemDeServico(OrdemDeServico ordemDeServico) {
-		this.ordemDeServico = ordemDeServico;
+	public void setRelatorio(Relatorio relatorio) {
+		this.relatorio = relatorio;
 	}
 
 	public Veiculo getVeiculo() {
@@ -102,13 +102,22 @@ public class Agendamento {
 	public List<String> getOpcoesPagamento() {
 		return opcoesPagamento;
 	}
-	public Double getValor() {
-		return valor;
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
-	public void setValor(Double valor) {
-		this.valor = valor;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Agendamento other = (Agendamento) obj;
+		return Objects.equals(id, other.id);
 	}
-	
-	
 
 }

@@ -86,7 +86,7 @@ public class AgendamentoDaoJDBC implements AgendamentoDao {
 	public void deleteById(Integer id) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("DELETE FROM abertura WHERE Id = ?");
+			st = conn.prepareStatement("DELETE FROM oficina.agendamento WHERE Id = ?");
 
 			st.setInt(1, id);
 
