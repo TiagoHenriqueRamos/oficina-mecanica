@@ -133,7 +133,7 @@ public class RelatorioDaoJDBC implements RelatorioDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"UPDATE relatorio " + "SET id = ?, descricao = ?, valor = ?, clienteId = ?" + "WHERE id = ?");
+					"UPDATE relatorio " +  "SET id = ?, descricao = ?, valor = ?, clienteId = ?" + "WHERE id = ?");
 			st.setInt(1, obj.getId());
 			st.setString(2, obj.getObservacao());
 			st.setDouble(3, obj.getValor());
