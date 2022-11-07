@@ -94,9 +94,10 @@ public class RelatorioDaoJDBC implements RelatorioDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement("INSERT INTO oficina.relatorio "
-					+ "(id, ClienteId, VeiculoId, Valor, Pagamento, Data, Observacao, Horario)" + "VALUES"
-					+ "(DEFAULT, ?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+					+ "( ClienteId, VeiculoId, Valor, Pagamento, Data, Observacao, Horario)" + "VALUES"
+					+ "(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
+			
 			st.setInt(1, obj.getCliente().getId());
 			st.setInt(2, obj.getVeiculo().getId());
 			st.setDouble(3, obj.getValor());

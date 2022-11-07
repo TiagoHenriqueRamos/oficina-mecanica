@@ -3,6 +3,7 @@ package model.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class Cliente extends Veiculo implements Serializable {
 
 	private static final long serialVersionUID = 1L;

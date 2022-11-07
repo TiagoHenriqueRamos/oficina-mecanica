@@ -125,16 +125,16 @@ public class AgendamentoFinalizar implements Initializable {
 	@FXML
 	public void onBtSalvar(ActionEvent event) {
 
-		if (entidade == null) {
+		if (entidade == null || relatorio == null) {
 			throw new IllegalStateException("Entidade nula!");
 		}
-		if (agendamentoService == null) {
+		if (agendamentoService == null || relatorioService == null) {
 			throw new IllegalStateException("Service nulo!");
 		}
 		try {
 
 			entidade = getFormData();
-			relatorioService.insert(entidade.getRelatorio());
+			relatorioService.insert(relatorio);
 			agendamentoService.deleteById(entidade.getId());
 
 			notifyDataChangeListeners();
